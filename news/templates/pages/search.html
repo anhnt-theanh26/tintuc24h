@@ -1,0 +1,107 @@
+{% extends "layout-sidebar.html" %}
+
+{% load static %}
+{% load highlight  %}
+
+
+{% block content %}
+<div class="whats-news-wrapper">
+    <!-- Heading & Nav Button -->
+    <div class="row justify-content-between align-items-end mb-15">
+        <div class="col-12">
+            <div class="section-tittle mb-30 ml-10">
+                <h3>Kết quả cho từ khóa: {{ keyword|truncatechars:60 }}</h3>
+            </div>
+        </div>
+    </div>
+    <!-- Tab content -->
+    <div class="row">
+        <div class="col-12">
+            <!-- Nav Card -->
+            <div class="tab-content" id="nav-tabContent">
+                <!-- card one -->
+                <div class="tab-pane fade show active" id="nav-home" role="tabpanel"
+                    aria-labelledby="nav-home-tab">
+                    <div class="row">
+
+                        {% for item in items_article %}
+                            <div class="col-xl-6 col-lg-6 col-md-6">
+                                <div class="whats-news-single mb-40 mb-40">
+                                    <div class="whates-img" style="height: 200px;">
+                                        <img src="{{ item.image.url }}"
+                                            alt="{{ item.name }}" style="height: 100%; object-fit: cover;">
+                                    </div>
+                                    <div class="whates-caption whates-caption2">
+
+                                        <h4><a href="{{ item.get_absolute_url }}">{{ item.name|highlights:keyword }}</a></h4>
+                                        <span>by Admin - {{ item.publish_date|date:'d/m/Y' }}</span>
+                                        <p>
+                                        <p>{{ item.content|safe|truncatechars:200 }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+            <!-- End Nav Card -->
+        </div>
+    </div>
+</div>
+
+<!--Start pagination -->
+{% if paginator.num_pages >= 2 %}
+    <div class="pagination-area  gray-bg pb-45 mt-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-xl-12">
+                    <div class="single-wrap">
+                        <nav aria-label="Page navigation example">
+                            <ul class="pagination justify-content-start">
+
+                                {% if items_article.has_previous %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?keyword={{ keyword }}&page={{ items_article.previous_page_number }}">
+                                            <!-- SVG iocn -->
+                                            <svg transform="rotate(180)" height="15px" width="40px" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns="http://www.w3.org/2000/svg">
+                                                <path d="M31.112,13.118 L32.281,14.136 L39.127,7.646 L39.127,6.624 L32.281,0.132 L31.167,1.154 L36.571,6.413 L0.491,6.413 L0.491,7.857 L36.571,7.857 L31.112,13.118 Z" fill="rgb(255, 11, 11)" fill-rule="evenodd"></path>
+                                            </svg>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                                {% for page in paginator.page_range %}
+                                    {% if page == items_article.number %}
+                                        <li class="page-item active"><a class="page-link" href="#">{{ page }}</a>
+                                        </li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link"
+                                                href="?keyword={{ keyword }}&page={{ page }}">{{ page }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if items_article.has_next %}
+                                    <li class="page-item">
+                                        <a class="page-link" href="?keyword={{ keyword }}&page={{ items_article.next_page_number }}">
+                                            <!-- SVG iocn -->
+                                            <svg xmlns="http://www.w3.org/2000/svg"
+                                                xmlns:xlink="http://www.w3.org/1999/xlink" width="40px"
+                                                height="15px">
+                                                <path fill-rule="evenodd" fill="rgb(255, 11, 11)"
+                                                    d="M31.112,13.118 L32.281,14.136 L39.127,7.646 L39.127,6.624 L32.281,0.132 L31.167,1.154 L36.571,6.413 L0.491,6.413 L0.491,7.857 L36.571,7.857 L31.112,13.118 Z" />
+                                            </svg>
+                                        </a>
+                                    </li>
+                                {% endif %}
+
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endif %}
+<!-- End pagination  -->
+{% endblock content %}
